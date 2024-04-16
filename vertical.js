@@ -1,106 +1,67 @@
 "use strict";
 // Class definition
 
-var KTDatatableColumnRenderingDemo = function() {
+var KTDefaultDatatableDemo = function () {
 	// Private functions
 
 	// basic demo
-	var demo = function() {
+	var demo = function () {
 
 		var datatable = $('.kt-datatable').KTDatatable({
-			// datasource definition
 			data: {
 				type: 'remote',
 				source: {
 					read: {
-						url: 'https://keenthemes.com/metronic/themes/themes/metronic/dist/preview/inc/api/datatables/demos/default.php',
-					},
+						url: 'https://keenthemes.com/metronic/themes/themes/metronic/dist/preview/inc/api/datatables/demos/default.php'
+					}
 				},
-				pageSize: 10, // display 20 records per page
+				pageSize: 20,
 				serverPaging: true,
 				serverFiltering: true,
-				serverSorting: true,
+				serverSorting: true
 			},
 
-			// layout definition
 			layout: {
-				scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
-				footer: false, // display/hide footer
+				scroll: true,
+				height: 550,
+				footer: false
 			},
 
-			// column sorting
 			sortable: true,
+
+			filterable: false,
 
 			pagination: true,
 
 			search: {
-				input: $('#generalSearch'),
-				delay: 400,
+				input: $('#generalSearch')
 			},
 
-			// columns definition
 			columns: [
 				{
 					field: 'RecordID',
 					title: '#',
-					sortable: 'asc',
-					width: 30,
+					sortable: false,
+					width: 20,
 					type: 'number',
 					selector: false,
 					textAlign: 'center',
 				}, {
 					field: 'OrderID',
 					title: 'Order ID',
-					template: function(data) {
-						var number = KTUtil.getRandomInt(1, 14);
-						var user_img = '100_' + number + '.jpg';
-
-						var output = '';
-						if (number > 8) {
-							output = '<div class="kt-user-card-v2">\
-								<div class="kt-user-card-v2__pic">\
-									<img src="assets/media/users/' + user_img + '" alt="photo">\
-								</div>\
-								<div class="kt-user-card-v2__details">\
-									<span class="kt-user-card-v2__name">' + data.CompanyAgent + '</span>\
-									<a href="#" class="kt-user-card-v2__email kt-link">' +
-									data.CompanyEmail + '</a>\
-								</div>\
-							</div>';
-						}
-						else {
-							var stateNo = KTUtil.getRandomInt(0, 7);
-							var states = [
-								'success',
-								'brand',
-								'danger',
-								'success',
-								'warning',
-								'dark',
-								'primary',
-								'info'];
-							var state = states[stateNo];
-
-							output = '<div class="kt-user-card-v2">\
-								<div class="kt-user-card-v2__pic">\
-									<div class="kt-badge kt-badge--xl kt-badge--' + state + '">' + data.CompanyAgent.substring(0, 1) + '</div>\
-								</div>\
-								<div class="kt-user-card-v2__details">\
-									<span class="kt-user-card-v2__name">' + data.CompanyAgent + '</span>\
-									<a href="#" class="kt-user-card-v2__email kt-link">' +
-									data.CompanyEmail + '</a>\
-								</div>\
-							</div>';
-						}
-
-						return output;
-					},
 				}, {
 					field: 'Country',
 					title: 'Country',
 					template: function(row) {
 						return row.Country + ' ' + row.ShipCountry;
 					},
+				}, {
+					field: 'CompanyEmail',
+					width: 150,
+					title: 'Email',
+				}, {
+					field: 'ShipAddress',
+					title: 'Ship Address',
 				}, {
 					field: 'ShipDate',
 					title: 'Ship Date',
@@ -180,16 +141,16 @@ var KTDatatableColumnRenderingDemo = function() {
 
     $('#kt_form_status,#kt_form_type').selectpicker();
 
-	};
+  };
 
 	return {
 		// public functions
-		init: function() {
+		init: function () {
 			demo();
-		},
+		}
 	};
 }();
 
-jQuery(document).ready(function() {
-	KTDatatableColumnRenderingDemo.init();
+jQuery(document).ready(function () {
+	KTDefaultDatatableDemo.init();
 });

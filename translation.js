@@ -1,7 +1,7 @@
 "use strict";
 // Class definition
 
-var KTDatatableColumnRenderingDemo = function() {
+var KTDatatableTranslationDemo = function() {
 	// Private functions
 
 	// basic demo
@@ -16,15 +16,16 @@ var KTDatatableColumnRenderingDemo = function() {
 						url: 'https://keenthemes.com/metronic/themes/themes/metronic/dist/preview/inc/api/datatables/demos/default.php',
 					},
 				},
-				pageSize: 10, // display 20 records per page
+				pageSize: 10,
 				serverPaging: true,
-				serverFiltering: true,
+				serverFiltering: false,
 				serverSorting: true,
 			},
 
 			// layout definition
 			layout: {
 				scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+				height: null, // datatable's body's fixed height
 				footer: false, // display/hide footer
 			},
 
@@ -35,7 +36,6 @@ var KTDatatableColumnRenderingDemo = function() {
 
 			search: {
 				input: $('#generalSearch'),
-				delay: 400,
 			},
 
 			// columns definition
@@ -51,50 +51,6 @@ var KTDatatableColumnRenderingDemo = function() {
 				}, {
 					field: 'OrderID',
 					title: 'Order ID',
-					template: function(data) {
-						var number = KTUtil.getRandomInt(1, 14);
-						var user_img = '100_' + number + '.jpg';
-
-						var output = '';
-						if (number > 8) {
-							output = '<div class="kt-user-card-v2">\
-								<div class="kt-user-card-v2__pic">\
-									<img src="assets/media/users/' + user_img + '" alt="photo">\
-								</div>\
-								<div class="kt-user-card-v2__details">\
-									<span class="kt-user-card-v2__name">' + data.CompanyAgent + '</span>\
-									<a href="#" class="kt-user-card-v2__email kt-link">' +
-									data.CompanyEmail + '</a>\
-								</div>\
-							</div>';
-						}
-						else {
-							var stateNo = KTUtil.getRandomInt(0, 7);
-							var states = [
-								'success',
-								'brand',
-								'danger',
-								'success',
-								'warning',
-								'dark',
-								'primary',
-								'info'];
-							var state = states[stateNo];
-
-							output = '<div class="kt-user-card-v2">\
-								<div class="kt-user-card-v2__pic">\
-									<div class="kt-badge kt-badge--xl kt-badge--' + state + '">' + data.CompanyAgent.substring(0, 1) + '</div>\
-								</div>\
-								<div class="kt-user-card-v2__details">\
-									<span class="kt-user-card-v2__name">' + data.CompanyAgent + '</span>\
-									<a href="#" class="kt-user-card-v2__email kt-link">' +
-									data.CompanyEmail + '</a>\
-								</div>\
-							</div>';
-						}
-
-						return output;
-					},
 				}, {
 					field: 'Country',
 					title: 'Country',
@@ -137,7 +93,7 @@ var KTDatatableColumnRenderingDemo = function() {
 							3: {'title': 'Direct', 'state': 'success'},
 						};
 						return '<span class="kt-badge kt-badge--' + status[row.Type].state + ' kt-badge--dot"></span>&nbsp;<span class="kt-font-bold kt-font-' + status[row.Type].state + '">' +
-								status[row.Type].title + '</span>';
+							status[row.Type].title + '</span>';
 					},
 				}, {
 					field: 'Actions',
@@ -148,26 +104,48 @@ var KTDatatableColumnRenderingDemo = function() {
 					autoHide: false,
 					template: function() {
 						return '\
-							<div class="dropdown">\
-								<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown">\
-	                                <i class="la la-ellipsis-h"></i>\
-	                            </a>\
-							    <div class="dropdown-menu dropdown-menu-right">\
-							        <a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>\
-							        <a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>\
-							        <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>\
-							    </div>\
-							</div>\
-							<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details">\
-								<i class="la la-edit"></i>\
-							</a>\
-							<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Delete">\
-								<i class="la la-trash"></i>\
-							</a>\
-						';
+						<div class="dropdown">\
+							<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown">\
+                                <i class="la la-ellipsis-h"></i>\
+                            </a>\
+						  	<div class="dropdown-menu dropdown-menu-right">\
+						    	<a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>\
+						    	<a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>\
+						    	<a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>\
+						  	</div>\
+						</div>\
+						<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details">\
+							<i class="la la-edit"></i>\
+						</a>\
+						<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Delete">\
+							<i class="la la-trash"></i>\
+						</a>\
+					';
 					},
 				}],
 
+			translate: {
+				records: {
+					processing: 'Cargando...',
+					noRecords: 'No se encontrarón archivos',
+				},
+				toolbar: {
+					pagination: {
+						items: {
+							default: {
+								first: 'Primero',
+								prev: 'Anterior',
+								next: 'Siguiente',
+								last: 'Último',
+								more: 'Más páginas',
+								input: 'Número de página',
+								select: 'Seleccionar tamaño de página',
+							},
+							info: 'Viendo {{start}} - {{end}} de {{total}} registros',
+						},
+					},
+				},
+			},
 		});
 
     $('#kt_form_status').on('change', function() {
@@ -180,7 +158,7 @@ var KTDatatableColumnRenderingDemo = function() {
 
     $('#kt_form_status,#kt_form_type').selectpicker();
 
-	};
+  };
 
 	return {
 		// public functions
@@ -191,5 +169,5 @@ var KTDatatableColumnRenderingDemo = function() {
 }();
 
 jQuery(document).ready(function() {
-	KTDatatableColumnRenderingDemo.init();
+	KTDatatableTranslationDemo.init();
 });

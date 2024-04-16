@@ -1,7 +1,7 @@
 "use strict";
 // Class definition
 
-var KTDatatableColumnRenderingDemo = function() {
+var KTDatatableLocalSortDemo = function() {
 	// Private functions
 
 	// basic demo
@@ -16,10 +16,14 @@ var KTDatatableColumnRenderingDemo = function() {
 						url: 'https://keenthemes.com/metronic/themes/themes/metronic/dist/preview/inc/api/datatables/demos/default.php',
 					},
 				},
-				pageSize: 10, // display 20 records per page
-				serverPaging: true,
+				pageSize: 10,
+				serverPaging: false,
 				serverFiltering: true,
-				serverSorting: true,
+				serverSorting: false,
+				saveState: {
+					cookie: true,
+					webstorage: true,
+				},
 			},
 
 			// layout definition
@@ -35,7 +39,6 @@ var KTDatatableColumnRenderingDemo = function() {
 
 			search: {
 				input: $('#generalSearch'),
-				delay: 400,
 			},
 
 			// columns definition
@@ -51,50 +54,6 @@ var KTDatatableColumnRenderingDemo = function() {
 				}, {
 					field: 'OrderID',
 					title: 'Order ID',
-					template: function(data) {
-						var number = KTUtil.getRandomInt(1, 14);
-						var user_img = '100_' + number + '.jpg';
-
-						var output = '';
-						if (number > 8) {
-							output = '<div class="kt-user-card-v2">\
-								<div class="kt-user-card-v2__pic">\
-									<img src="assets/media/users/' + user_img + '" alt="photo">\
-								</div>\
-								<div class="kt-user-card-v2__details">\
-									<span class="kt-user-card-v2__name">' + data.CompanyAgent + '</span>\
-									<a href="#" class="kt-user-card-v2__email kt-link">' +
-									data.CompanyEmail + '</a>\
-								</div>\
-							</div>';
-						}
-						else {
-							var stateNo = KTUtil.getRandomInt(0, 7);
-							var states = [
-								'success',
-								'brand',
-								'danger',
-								'success',
-								'warning',
-								'dark',
-								'primary',
-								'info'];
-							var state = states[stateNo];
-
-							output = '<div class="kt-user-card-v2">\
-								<div class="kt-user-card-v2__pic">\
-									<div class="kt-badge kt-badge--xl kt-badge--' + state + '">' + data.CompanyAgent.substring(0, 1) + '</div>\
-								</div>\
-								<div class="kt-user-card-v2__details">\
-									<span class="kt-user-card-v2__name">' + data.CompanyAgent + '</span>\
-									<a href="#" class="kt-user-card-v2__email kt-link">' +
-									data.CompanyEmail + '</a>\
-								</div>\
-							</div>';
-						}
-
-						return output;
-					},
 				}, {
 					field: 'Country',
 					title: 'Country',
@@ -107,8 +66,31 @@ var KTDatatableColumnRenderingDemo = function() {
 					type: 'date',
 					format: 'MM/DD/YYYY',
 				}, {
-					field: 'CompanyName',
-					title: 'Company Name',
+					field: 'TotalPayment',
+					title: 'Payment',
+					type: 'number',
+					// custom sort callback for number
+					sortCallback: function(data, sort, column) {
+						var field = column['field'];
+						return $(data).sort(function(a, b) {
+							var aField = a[field];
+							var bField = b[field];
+							if (isNaN(parseFloat(aField)) && aField != null) {
+								aField = Number(aField.replace(/[^0-9\.-]+/g, ''));
+							}
+							if (isNaN(parseFloat(bField)) && aField != null) {
+								bField = Number(bField.replace(/[^0-9\.-]+/g, ''));
+							}
+							aField = parseFloat(aField);
+							bField = parseFloat(bField);
+							if (sort === 'asc') {
+								return aField > bField ? 1 : aField < bField ? -1 : 0;
+							}
+							else {
+								return aField < bField ? 1 : aField > bField ? -1 : 0;
+							}
+						});
+					},
 				}, {
 					field: 'Status',
 					title: 'Status',
@@ -148,27 +130,29 @@ var KTDatatableColumnRenderingDemo = function() {
 					autoHide: false,
 					template: function() {
 						return '\
-							<div class="dropdown">\
-								<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown">\
-	                                <i class="la la-ellipsis-h"></i>\
-	                            </a>\
-							    <div class="dropdown-menu dropdown-menu-right">\
-							        <a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>\
-							        <a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>\
-							        <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>\
-							    </div>\
-							</div>\
-							<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details">\
-								<i class="la la-edit"></i>\
-							</a>\
-							<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Delete">\
-								<i class="la la-trash"></i>\
-							</a>\
-						';
+						<div class="dropdown">\
+							<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown">\
+                                <i class="la la-cog"></i>\
+                            </a>\
+						  	<div class="dropdown-menu dropdown-menu-right">\
+						    	<a class="dropdown-item" href="#"><i class="la la-edit"></i> Edit Details</a>\
+						    	<a class="dropdown-item" href="#"><i class="la la-leaf"></i> Update Status</a>\
+						    	<a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>\
+						  	</div>\
+						</div>\
+						<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Edit details">\
+							<i class="la la-edit"></i>\
+						</a>\
+						<a href="javascript:;" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="Delete">\
+							<i class="la la-trash"></i>\
+						</a>\
+					';
 					},
 				}],
-
 		});
+
+		var p = datatable.getDataSourceQuery();
+		console.log(p);
 
     $('#kt_form_status').on('change', function() {
       datatable.search($(this).val().toLowerCase(), 'Status');
@@ -191,5 +175,5 @@ var KTDatatableColumnRenderingDemo = function() {
 }();
 
 jQuery(document).ready(function() {
-	KTDatatableColumnRenderingDemo.init();
+	KTDatatableLocalSortDemo.init();
 });

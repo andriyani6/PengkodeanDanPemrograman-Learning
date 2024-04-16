@@ -1,7 +1,7 @@
 "use strict";
 // Class definition
 
-var KTDatatableColumnRenderingDemo = function() {
+var KTDatatableAutoColumnHideDemo = function() {
 	// Private functions
 
 	// basic demo
@@ -16,16 +16,16 @@ var KTDatatableColumnRenderingDemo = function() {
 						url: 'https://keenthemes.com/metronic/themes/themes/metronic/dist/preview/inc/api/datatables/demos/default.php',
 					},
 				},
-				pageSize: 10, // display 20 records per page
+				pageSize: 10,
+				saveState: false,
 				serverPaging: true,
 				serverFiltering: true,
 				serverSorting: true,
 			},
 
-			// layout definition
 			layout: {
-				scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
-				footer: false, // display/hide footer
+				scroll: true,
+				height: 550,
 			},
 
 			// column sorting
@@ -35,72 +35,23 @@ var KTDatatableColumnRenderingDemo = function() {
 
 			search: {
 				input: $('#generalSearch'),
-				delay: 400,
 			},
 
 			// columns definition
 			columns: [
 				{
-					field: 'RecordID',
-					title: '#',
-					sortable: 'asc',
-					width: 30,
-					type: 'number',
-					selector: false,
-					textAlign: 'center',
-				}, {
 					field: 'OrderID',
 					title: 'Order ID',
-					template: function(data) {
-						var number = KTUtil.getRandomInt(1, 14);
-						var user_img = '100_' + number + '.jpg';
-
-						var output = '';
-						if (number > 8) {
-							output = '<div class="kt-user-card-v2">\
-								<div class="kt-user-card-v2__pic">\
-									<img src="assets/media/users/' + user_img + '" alt="photo">\
-								</div>\
-								<div class="kt-user-card-v2__details">\
-									<span class="kt-user-card-v2__name">' + data.CompanyAgent + '</span>\
-									<a href="#" class="kt-user-card-v2__email kt-link">' +
-									data.CompanyEmail + '</a>\
-								</div>\
-							</div>';
-						}
-						else {
-							var stateNo = KTUtil.getRandomInt(0, 7);
-							var states = [
-								'success',
-								'brand',
-								'danger',
-								'success',
-								'warning',
-								'dark',
-								'primary',
-								'info'];
-							var state = states[stateNo];
-
-							output = '<div class="kt-user-card-v2">\
-								<div class="kt-user-card-v2__pic">\
-									<div class="kt-badge kt-badge--xl kt-badge--' + state + '">' + data.CompanyAgent.substring(0, 1) + '</div>\
-								</div>\
-								<div class="kt-user-card-v2__details">\
-									<span class="kt-user-card-v2__name">' + data.CompanyAgent + '</span>\
-									<a href="#" class="kt-user-card-v2__email kt-link">' +
-									data.CompanyEmail + '</a>\
-								</div>\
-							</div>';
-						}
-
-						return output;
-					},
 				}, {
 					field: 'Country',
 					title: 'Country',
 					template: function(row) {
 						return row.Country + ' ' + row.ShipCountry;
 					},
+				}, {
+					field: 'CompanyEmail',
+					title: 'Email',
+					width: 'auto',
 				}, {
 					field: 'ShipDate',
 					title: 'Ship Date',
@@ -109,6 +60,20 @@ var KTDatatableColumnRenderingDemo = function() {
 				}, {
 					field: 'CompanyName',
 					title: 'Company Name',
+					width: 'auto',
+				}, {
+					field: 'ShipAddress',
+					title: 'Ship Address',
+				}, {
+					field: 'Website',
+					title: 'Website',
+				}, {
+					field: 'TotalPayment',
+					title: 'Payment',
+				}, {
+					field: 'Notes',
+					title: 'Notes',
+					width: 'auto',
 				}, {
 					field: 'Status',
 					title: 'Status',
@@ -128,7 +93,6 @@ var KTDatatableColumnRenderingDemo = function() {
 				}, {
 					field: 'Type',
 					title: 'Type',
-					autoHide: false,
 					// callback function support for column rendering
 					template: function(row) {
 						var status = {
@@ -191,5 +155,5 @@ var KTDatatableColumnRenderingDemo = function() {
 }();
 
 jQuery(document).ready(function() {
-	KTDatatableColumnRenderingDemo.init();
+	KTDatatableAutoColumnHideDemo.init();
 });
