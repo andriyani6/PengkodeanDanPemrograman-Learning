@@ -1,5 +1,5 @@
 "use strict";
-var KTDatatablesBasicBasic = function() {
+var KTDatatablesExtensionsScroller = function() {
 
 	var initTable1 = function() {
 		var table = $('#kt_table_1');
@@ -7,44 +7,24 @@ var KTDatatablesBasicBasic = function() {
 		// begin first table
 		table.DataTable({
 			responsive: true,
-
-			// DOM Layout settings
-			dom: `<'row'<'col-sm-12'tr>>
-			<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 dataTables_pager'lp>>`,
-
-			lengthMenu: [5, 10, 25, 50],
-
-			pageLength: 10,
-
-			language: {
-				'lengthMenu': 'Display _MENU_',
-			},
-
-			// Order settings
-			order: [[1, 'desc']],
-
-			headerCallback: function(thead, data, start, end, display) {
-				thead.getElementsByTagName('th')[0].innerHTML = `
-                    <label class="kt-checkbox kt-checkbox--single kt-checkbox--solid">
-                        <input type="checkbox" value="" class="m-group-checkable">
-                        <span></span>
-                    </label>`;
-			},
-
+			ajax: 'https://keenthemes.com/metronic/themes/themes/metronic/dist/preview/inc/api/datatables/demos/server.php',
+			deferRender: true,
+			scrollY: '500px',
+			scrollCollapse: true,
+			scroller: true,
+			columns: [
+				{data: 'RecordID', visible: false},
+				{data: 'OrderID'},
+				{data: 'ShipCity'},
+				{data: 'ShipAddress'},
+				{data: 'CompanyAgent'},
+				{data: 'CompanyName'},
+				{data: 'ShipDate'},
+				{data: 'Status'},
+				{data: 'Type'},
+				{data: 'Actions', responsivePriority: -1},
+			],
 			columnDefs: [
-				{
-					targets: 0,
-					width: '30px',
-					className: 'dt-right',
-					orderable: false,
-					render: function(data, type, full, meta) {
-						return `
-                        <label class="kt-checkbox kt-checkbox--single kt-checkbox--solid">
-                            <input type="checkbox" value="" class="m-checkable">
-                            <span></span>
-                        </label>`;
-					},
-				},
 				{
 					targets: -1,
 					title: 'Actions',
@@ -67,7 +47,7 @@ var KTDatatablesBasicBasic = function() {
 					},
 				},
 				{
-					targets: 8,
+					targets: -3,
 					render: function(data, type, full, meta) {
 						var status = {
 							1: {'title': 'Pending', 'class': 'kt-badge--brand'},
@@ -85,7 +65,7 @@ var KTDatatablesBasicBasic = function() {
 					},
 				},
 				{
-					targets: 9,
+					targets: -2,
 					render: function(data, type, full, meta) {
 						var status = {
 							1: {'title': 'Online', 'state': 'danger'},
@@ -101,26 +81,6 @@ var KTDatatablesBasicBasic = function() {
 				},
 			],
 		});
-
-		table.on('change', '.kt-group-checkable', function() {
-			var set = $(this).closest('table').find('td:first-child .kt-checkable');
-			var checked = $(this).is(':checked');
-
-			$(set).each(function() {
-				if (checked) {
-					$(this).prop('checked', true);
-					$(this).closest('tr').addClass('active');
-				}
-				else {
-					$(this).prop('checked', false);
-					$(this).closest('tr').removeClass('active');
-				}
-			});
-		});
-
-		table.on('change', 'tbody tr .kt-checkbox', function() {
-			$(this).parents('tr').toggleClass('active');
-		});
 	};
 
 	return {
@@ -135,5 +95,5 @@ var KTDatatablesBasicBasic = function() {
 }();
 
 jQuery(document).ready(function() {
-	KTDatatablesBasicBasic.init();
+	KTDatatablesExtensionsScroller.init();
 });
